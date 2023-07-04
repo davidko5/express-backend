@@ -1,0 +1,1 @@
+Backend for my "Poster" app. Made using Express. Is used to handle requests from frontend and communicate with mongoDB instance on Atlas.
