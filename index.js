@@ -3,10 +3,14 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
+
 const mongoose = require("mongoose");
 const config = require("./config");
+
 const postsRouter = require("./routes/posts");
 const usersRouter = require("./routes/users");
+const utilsRouter = require("./routes/utils")
+const cryptoAppRouter = require("./routes/crypto-app")
 
 // mongoose.set("useNewUrlParser", true);
 // mongoose.set("useFindAndModify", false);
@@ -33,8 +37,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
-// const playersRouter = require("./routes/players");
-// app.use("/players", playersRouter);
+app.use("/utils", utilsRouter);
+app.use("/crypto-app", cryptoAppRouter);
 
 const port = process.env.PORT || 3001;
 
