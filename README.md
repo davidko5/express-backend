@@ -1,3 +1,3 @@
 #  express backend for "Poster" app
 
-Backend for my "Poster" app. Made using Express. It is used to handle requests from frontend and communicate with mongoDB instance on Atlas.
+Backend that serves needs of two of my projects: "Poster"(poster-frontend) and "Crypto-wallet"(crypto-app-landing-vue).In case of "Poster" it handles requests from frontend and communicates with MongoDB instance on Atlas, performing CRUD operations.In case of "Crypto-wallet" it acts as a proxy to prompt Coinmarketcap API as an easy way to satisfy CORS policy.
