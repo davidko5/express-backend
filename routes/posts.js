@@ -293,7 +293,7 @@ router.put("/delete/:postId/:commentId/:replyId", async (req, res) => {
 
 router.delete("/delete/:postId", async (req, res) => {
   try {
-    let post = await Post.findByIdAndRemove(req.params.postId);
+    let post = await Post.findByIdAndDelete(req.params.postId);
     if (post) {
       res.status(200).json({
         status: 200,

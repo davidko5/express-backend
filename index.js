@@ -9,22 +9,22 @@ const config = require("./config");
 
 const postsRouter = require("./routes/posts");
 const usersRouter = require("./routes/users");
-const utilsRouter = require("./routes/utils")
-const cryptoAppRouter = require("./routes/crypto-app")
+const utilsRouter = require("./routes/utils");
+const cryptoAppRouter = require("./routes/crypto-app");
+// const testingRouter = require("./routes/testing");
 
 // mongoose.set("useNewUrlParser", true);
 // mongoose.set("useFindAndModify", false);
 // mongoose.set("useCreateIndex", true);
-
 app.use(logger("dev"));
 
 const dbUrl = config.dbUrl;
 
 var options = {
-    // keepAlive: true,
-    connectTimeoutMS: 30000,
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
+  // keepAlive: true,
+  connectTimeoutMS: 30000,
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
 };
 
 // mongoose.connect(dbUrl, options, (err) => {
@@ -37,6 +37,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
+// Conditionally adding test routes only if in testing mode
+if (process.env.NODE_ENV === "test")
+  app.use("/test", require("./routes/testing"));
+
 app.use("/utils", utilsRouter);
 app.use("/crypto-app", cryptoAppRouter);
 
