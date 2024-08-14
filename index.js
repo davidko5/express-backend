@@ -49,5 +49,6 @@ const port = process.env.PORT || 3001;
 app.listen(port, function () {
   console.log("Runnning on " + port);
 });
-
+// To see which version is used on "Render.com"
+console.log(process.version);
 module.exports = app;
