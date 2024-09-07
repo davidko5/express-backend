@@ -97,7 +97,6 @@ router.put("/add/:postId", async (req, res) => {
 router.put("/add/:postId/:commentId", async (req, res) => {
   // add reply to comment in post by postId and commentId
   const body = { ...req.body, createdAt: new Date(), updatedAt: new Date() };
-  console.log(body);
   try {
     let post = await Post.findByIdAndUpdate(
       req.params.postId,

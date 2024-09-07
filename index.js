@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 // Conditionally adding test routes only if in testing mode
-if (process.env.NODE_ENV === "test")
+if (process.env.NODE_ENV === "local_db_test" || process.env.NODE_ENV === "global_db_test")
   app.use("/test", require("./routes/testing"));
 
 app.use("/utils", utilsRouter);
@@ -49,6 +49,5 @@ const port = process.env.PORT || 3001;
 app.listen(port, function () {
   console.log("Runnning on " + port);
 });
-// To see which version is used on "Render.com"
-console.log(process.version);
+
 module.exports = app;
