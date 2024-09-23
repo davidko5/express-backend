@@ -1,22 +1,24 @@
-const express = require("express");
+require('dotenv').config();
+
+const express = require('express');
 const app = express();
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const logger = require("morgan");
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
 
-const mongoose = require("mongoose");
-const config = require("./config");
+const mongoose = require('mongoose');
+const config = require('./config');
 
-const postsRouter = require("./routes/posts");
-const usersRouter = require("./routes/users");
-const utilsRouter = require("./routes/utils");
-const cryptoAppRouter = require("./routes/crypto-app");
+const postsRouter = require('./routes/posts');
+const usersRouter = require('./routes/users');
+const utilsRouter = require('./routes/utils');
+const cryptoAppRouter = require('./routes/crypto-app');
 // const testingRouter = require("./routes/testing");
 
 // mongoose.set("useNewUrlParser", true);
 // mongoose.set("useFindAndModify", false);
 // mongoose.set("useCreateIndex", true);
-app.use(logger("dev"));
+app.use(logger('dev'));
 
 const dbUrl = config.dbUrl;
 
@@ -35,19 +37,22 @@ mongoose.connect(dbUrl, options);
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use("/posts", postsRouter);
-app.use("/users", usersRouter);
+app.use('/posts', postsRouter);
+app.use('/users', usersRouter);
 // Conditionally adding test routes only if in testing mode
-if (process.env.NODE_ENV === "local_db_test" || process.env.NODE_ENV === "global_db_test")
-  app.use("/test", require("./routes/testing"));
+if (
+  process.env.APP_MODE === 'local_db_test_url' ||
+  process.env.APP_MODE === 'global_db_test_url'
+)
+  app.use('/test', require('./routes/testing'));
 
-app.use("/utils", utilsRouter);
-app.use("/crypto-app", cryptoAppRouter);
+app.use('/utils', utilsRouter);
+app.use('/crypto-app', cryptoAppRouter);
 
 const port = process.env.PORT || 3001;
 
 app.listen(port, function () {
-  console.log("Runnning on " + port);
+  console.log('Runnning on ' + port);
 });
 
 module.exports = app;
