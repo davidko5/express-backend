@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "start:local-db-test": "NODE_ENV=local_db_test nodemon index.js",
-    "start:global-db-test": "NODE_ENV=global_db_test nodemon index.js"
+    "start": "APP_MODE=global_db_prod_url nodemon index.js",
+    "start:local-db-test": "APP_MODE=local_db_test_url nodemon index.js",
+    "start:global-db-test": "APP_MODE=global_db_test_url nodemon index.js"
   },
   "keywords": [
     "api",
