@@ -13,26 +13,12 @@ const postsRouter = require('./routes/posts');
 const usersRouter = require('./routes/users');
 const utilsRouter = require('./routes/utils');
 const cryptoAppRouter = require('./routes/crypto-app');
-// const testingRouter = require("./routes/testing");
 
-// mongoose.set("useNewUrlParser", true);
-// mongoose.set("useFindAndModify", false);
-// mongoose.set("useCreateIndex", true);
 app.use(logger('dev'));
 
-const dbUrl = config.dbUrl;
-
-var options = {
-  // keepAlive: true,
+mongoose.connect(config.dbUrl, {
   connectTimeoutMS: 30000,
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
-};
-
-// mongoose.connect(dbUrl, options, (err) => {
-//     if (err) console.log(err);
-// });
-mongoose.connect(dbUrl, options);
+});
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,9 +29,9 @@ app.use('/users', usersRouter);
 if (
   process.env.APP_MODE === 'local_db_test_url' ||
   process.env.APP_MODE === 'global_db_test_url'
-)
+) {
   app.use('/test', require('./routes/testing'));
-
+}
 app.use('/utils', utilsRouter);
 app.use('/crypto-app', cryptoAppRouter);
 
