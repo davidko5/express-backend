@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/wakey-wakey', async (req, res) => {
+router.get('/wakey-wakey', async (_, res) => {
   try {
     res.status(200).json({
       status: 200,
@@ -14,9 +14,7 @@ router.get('/wakey-wakey', async (req, res) => {
   }
 });
 
-router.get('/health', (req, res) => {
-  // eslint-disable-next-line no-constant-condition
-  if (true) throw 'error...  ';
+router.get('/health', (_, res) => {
   res.send('ok');
 });
 
