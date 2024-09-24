@@ -53,6 +53,7 @@ jobs:
           PUSH_AND_NOT_CONTAINS_SKIP: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message) , '#skip') }}
         run: echo "$PUSH_AND_NOT_CONTAINS_SKIP"
 
+        
   tag-release:
     needs: [deployment-pipeline]
     runs-on: ubuntu-20.04
