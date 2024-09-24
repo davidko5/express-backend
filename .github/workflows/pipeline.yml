@@ -20,46 +20,6 @@ jobs:
         if: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
-  a_test_job:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: github context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: commits
-        env:
-          COMMITS: ${{ toJson(github.event.commits) }}
-        run: echo "$COMMITS"
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
-      - name: joined messages
-        env:
-          JOINED_MESSAGES: ${{ join(github.event.commits.*.message) }}
-        run: echo "$JOINED_MESSAGES"
-      - name: contains skip
-        env:
-          CONTAINS_SKIP: ${{ contains(join(github.event.commits.*.message) , '#skip') }}
-        run: echo "$CONTAINS_SKIP"
-      - name: not contains skip
-        env:
-          NOT_CONTAINS_SKIP: ${{ !contains(join(github.event.commits.*.message) , '#skip') }}
-        run: echo "$NOT_CONTAINS_SKIP"
-      - name: push and not contains skip
-        env:
-          PUSH_AND_NOT_CONTAINS_SKIP: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message) , '#skip') }}
-        run: echo "$PUSH_AND_NOT_CONTAINS_SKIP"
-      - name: deployment skipped value
-        run: echo "$DEPLOYMENT_SKIPPED"
-      - name: skipped == 'false'
-        env:
-          IF_SKIPPED_FALSE: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
-        run: echo "$IF_SKIPPED_FALSE"
-
-
   tag-release:
     needs: [deployment-pipeline]
     runs-on: ubuntu-20.04
