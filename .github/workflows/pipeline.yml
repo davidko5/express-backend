@@ -1,7 +1,7 @@
 name: Deployment pipeline
 
 env:
-  DEPLOYMENT_SKIPPED: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message) , '#skip') }}
+  DEPLOYMENT_SKIPPED: ${{ github.event_name != 'push' || contains(join(github.event.commits.*.message) , '#skip') }}
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deployment
-        if: ${{ env.DEPLOYMENT_SKIPPED == true }}
+        if: ${{ env.DEPLOYMENT_SKIPPED == false }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
   a_test_job:
@@ -52,8 +52,10 @@ jobs:
         env:
           PUSH_AND_NOT_CONTAINS_SKIP: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message) , '#skip') }}
         run: echo "$PUSH_AND_NOT_CONTAINS_SKIP"
+      - name: deployment skipped value
+        run: echo "$DEPLOYMENT_SKIPPED"
 
-        
+
   tag-release:
     needs: [deployment-pipeline]
     runs-on: ubuntu-20.04
@@ -61,7 +63,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Bump version and push tag
-        if: ${{ env.DEPLOYMENT_SKIPPED == true }}
+        if: ${{ env.DEPLOYMENT_SKIPPED == false }}
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
