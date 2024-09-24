@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deployment
-        if: ${{ env.DEPLOYMENT_SKIPPED == false }}
+        if: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
   a_test_job:
@@ -54,6 +54,10 @@ jobs:
         run: echo "$PUSH_AND_NOT_CONTAINS_SKIP"
       - name: deployment skipped value
         run: echo "$DEPLOYMENT_SKIPPED"
+      - name: skipped == 'false'
+        env:
+          IF_SKIPPED_FALSE: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
+        run: echo "$IF_SKIPPED_FALSE"
 
 
   tag-release:
@@ -63,7 +67,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Bump version and push tag
-        if: ${{ env.DEPLOYMENT_SKIPPED == false }}
+        if: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
