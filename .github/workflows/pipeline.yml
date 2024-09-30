@@ -21,7 +21,7 @@ jobs:
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
       - name: Deployment success notification
         if: success()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: rjstone/discord-webhook-notify@v1.0.4
         with:
           severity: info
           text: Deployment succeeded!
@@ -29,7 +29,7 @@ jobs:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: Deployment failure notification
         if: failure()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: rjstone/discord-webhook-notify@v1.0.4
         with:
           severity: failure
           text: Deployment failed!
