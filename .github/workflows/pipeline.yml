@@ -28,13 +28,13 @@ jobs:
           message: "**Author:** ${{ github.event.head_commit.author.username }} \n **Commit URL:** ${{ github.event.head_commit.url }}"
           colour: '#34eb67'
       - name: Deploy failure notification
-        if: ${{ env.DEPLOYMENT_SKIPPED == 'false' && failure() }}
+        if: ${{ env.DEPLOYMENT_SKIPPED == 'false' && !failure() }}
         uses: stegzilla/discord-notify@v4
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: Deploy failed
           message: "**Author:** ${{ github.event.head_commit.author.username }} \n **Commit URL:** ${{ github.event.head_commit.url }}"
-          colour: '#9c1414'
+          colour: '#fa0202'
       
           # - name: Deployment success notification
       #   if: success()
