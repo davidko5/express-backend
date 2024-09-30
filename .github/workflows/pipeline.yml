@@ -19,6 +19,22 @@ jobs:
       - name: Trigger deployment
         if: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+      - name: Deployment success notification
+        if: success()
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: info
+          text: Deployment succeeded!
+          details: head commit ${{github.event.head_commit.url}}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Deployment failure notification
+        if: failure()
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: failure
+          text: Deployment failed!
+          details: head commit ${{github.event.head_commit.url}}
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   tag-release:
     needs: [deployment-pipeline]
@@ -28,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Bump version and push tag
         if: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
-        uses: anothrNick/github-tag-action@1.64.0
+        uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
