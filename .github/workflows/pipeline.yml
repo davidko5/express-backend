@@ -19,21 +19,21 @@ jobs:
       - name: Trigger deployment
         if: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-      - name: NOTIFY Deploy successful
+      - name: Deploy success notification
         if: ${{ env.DEPLOYMENT_SKIPPED == 'false' && success() }}
         uses: stegzilla/discord-notify@v4
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: Successfully deployed
-          message: "**Author:** ${{ github.event.pusher.username }} \n **PR URL:** ${{ github.event.pull_request.url }}"
+          message: "**Author:** ${{ github.event.head_commit.author.username }} \n **Commit URL:** ${{ github.event.head_commit.url }}"
           colour: '#34eb67'
-      - name: NOTIFY Deploy successful
-        if: ${{ env.DEPLOYMENT_SKIPPED == 'false' && success() }}
+      - name: Deploy failure notification
+        if: ${{ env.DEPLOYMENT_SKIPPED == 'false' && failure() }}
         uses: stegzilla/discord-notify@v4
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: Deploy failed
-          message: "**Author:** ${{ github.event.pusher.username }} \n **PR URL:** ${{ github.event.pull_request.url }}"
+          message: "**Author:** ${{ github.event.head_commit.author.username }} \n **Commit URL:** ${{ github.event.head_commit.url }}"
           colour: '#9c1414'
       
           # - name: Deployment success notification
