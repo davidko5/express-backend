@@ -19,6 +19,14 @@ jobs:
       - name: Trigger deployment
         if: ${{ env.DEPLOYMENT_SKIPPED == 'false' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+      - name: NOTIFY Deploy successful
+        if: ${{ success() }}
+        uses: stegzilla/discord-notify@v4
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          title: SUCCESS Deploy Pokedex
+          message: "**Commit message:** ${{ join(github.event.commits.*.message) }} \n **URL:** ${{ join(github.event.commits.*.url) }}"
+          colour: '#34eb67'
       - name: Deployment success notification
         if: success()
         uses: rjstone/discord-webhook-notify@v1.0.4
