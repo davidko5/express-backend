@@ -35,23 +35,6 @@ jobs:
           title: Deploy failed
           message: "**Author:** ${{ github.event.head_commit.author.username }} \n **Commit URL:** ${{ github.event.head_commit.url }}"
           colour: '#fa0202'
-      
-          # - name: Deployment success notification
-      #   if: success()
-      #   uses: rjstone/discord-webhook-notify@v1.0.4
-      #   with:
-      #     severity: info
-      #     text: Deployment succeeded!
-      #     details: head commit ${{github.event.head_commit.url}}
-      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      # - name: Deployment failure notification
-      #   if: failure()
-      #   uses: rjstone/discord-webhook-notify@v1.0.4
-      #   with:
-      #     severity: failure
-      #     text: Deployment failed!
-      #     details: head commit ${{github.event.head_commit.url}}
-      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   tag-release:
     needs: [deployment-pipeline]
