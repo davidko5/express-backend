@@ -11,14 +11,12 @@ let ReplySchema = new Schema(
       type: Number,
       default: 0,
     },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    authorId: {
+      type: String,
       required: true,
     },
     repliedTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
     }
   },
@@ -35,9 +33,8 @@ let CommentSchema = new Schema(
       type: Number,
       default: 0,
     },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    authorId: {
+      type: String,
       required: true,
     },
     replies: [ReplySchema],
@@ -51,9 +48,8 @@ let PostSchema = new Schema(
       type: String,
       required: true,
     },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    authorId: {
+      type: String,
       required: true,
     },
     score: {

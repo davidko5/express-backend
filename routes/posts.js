@@ -5,9 +5,9 @@ const router = express.Router();
 router.get("/list", async (req, res) => {
   try {
     let posts = await Post.find().populate([
-      "author",
-      "comments.author",
-      "comments.replies.author",
+      "authorId",
+      "comments.authorId",
+      "comments.replies.authorId",
     ]);
     res.status(200).json({
       status: 200,
