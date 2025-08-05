@@ -1,0 +1,20 @@
+name: Health check
+
+on:
+  schedule:
+    - cron: '1,4,7,11,13,17,20,23,26,29,32,35,38,41,44,47,50,53,56,58 * * * *'
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  ping-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: https://davidko5-express.onrender.com/utils/wakey-wakey
