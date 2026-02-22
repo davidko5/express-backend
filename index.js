@@ -21,7 +21,7 @@ mongoose.connect(config.dbUrl, {
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://davidko5.github.io/poster-frontend'
+  'https://davidko5.github.io'
 ];
 
 app.use(cors({
