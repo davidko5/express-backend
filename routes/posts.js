@@ -1,5 +1,6 @@
 const express = require("express");
 const Post = require("../models/Post");
+const authMiddleware = require("../utils/auth-middleware");
 const router = express.Router();
 
 router.get("/list", async (req, res) => {
@@ -45,7 +46,7 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-router.post("/add", async (req, res) => {
+router.post("/add", authMiddleware, async (req, res) => {
   try {
     let post = new Post(req.body);
     post = await post.save();
@@ -61,7 +62,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.put("/add/:postId", async (req, res) => {
+router.put("/add/:postId", authMiddleware, async (req, res) => {
   // add comment to post by postId
   try {
     let post = await Post.findByIdAndUpdate(
@@ -94,7 +95,7 @@ router.put("/add/:postId", async (req, res) => {
   }
 });
 
-router.put("/add/:postId/:commentId", async (req, res) => {
+router.put("/add/:postId/:commentId",  authMiddleware, async (req, res) => {
   // add reply to comment in post by postId and commentId
   const body = { ...req.body, createdAt: new Date(), updatedAt: new Date() };
   try {
@@ -129,7 +130,7 @@ router.put("/add/:postId/:commentId", async (req, res) => {
   }
 });
 
-router.put("/edit/:postId", async (req, res) => {
+router.put("/edit/:postId", authMiddleware,  async (req, res) => {
   // edit post by id
   try {
     let post = await Post.findByIdAndUpdate(req.params.postId, req.body, {
@@ -154,7 +155,7 @@ router.put("/edit/:postId", async (req, res) => {
   }
 });
 
-router.put("/edit/:postId/:commentId", async (req, res) => {
+router.put("/edit/:postId/:commentId", authMiddleware,  async (req, res) => {
   try {
     let post = await Post.findOneAndUpdate(
       { _id: req.params.postId },
@@ -186,7 +187,7 @@ router.put("/edit/:postId/:commentId", async (req, res) => {
   }
 });
 
-router.put("/edit/:postId/:commentId/:replyId", async (req, res) => {
+router.put("/edit/:postId/:commentId/:replyId", authMiddleware, async (req, res) => {
   try {
     let post = await Post.findOneAndUpdate(
       { _id: req.params.postId },
@@ -224,7 +225,7 @@ router.put("/edit/:postId/:commentId/:replyId", async (req, res) => {
   }
 });
 
-router.put("/delete/:postId/:commentId", async (req, res) => {
+router.put("/delete/:postId/:commentId", authMiddleware, async (req, res) => {
   // delete comment of post by postId and commentId
   try {
     let post = await Post.findByIdAndUpdate(
@@ -257,7 +258,7 @@ router.put("/delete/:postId/:commentId", async (req, res) => {
   }
 });
 
-router.put("/delete/:postId/:commentId/:replyId", async (req, res) => {
+router.put("/delete/:postId/:commentId/:replyId", authMiddleware, async (req, res) => {
   try {
     let post = await Post.findByIdAndUpdate(
       req.params.postId,
@@ -290,7 +291,7 @@ router.put("/delete/:postId/:commentId/:replyId", async (req, res) => {
   }
 });
 
-router.delete("/delete/:postId", async (req, res) => {
+router.delete("/delete/:postId", authMiddleware, async (req, res) => {
   try {
     let post = await Post.findByIdAndDelete(req.params.postId);
     if (post) {

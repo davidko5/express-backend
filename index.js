@@ -19,7 +19,15 @@ mongoose.connect(config.dbUrl, {
   connectTimeoutMS: 30000,
 });
 
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://davidko5.github.io/poster-frontend'
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/posts', postsRouter);

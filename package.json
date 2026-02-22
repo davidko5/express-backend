@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "APP_MODE=global_db_prod_url nodemon index.js",
+    "start": "PORT=5012 APP_MODE=global_db_prod_url nodemon index.js",
     "start:local-db-test": "APP_MODE=local_db_test_url nodemon index.js",
     "start:global-db-test": "APP_MODE=global_db_test_url nodemon index.js"
   },
@@ -22,6 +22,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0",
     "mongoose": "^8.5.3",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.4"
