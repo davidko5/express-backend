@@ -1,28 +1,46 @@
-const { verifyToken } = require('./jwks-client');
+const { verifyToken } = require("./jwks-client");
+const { unsealCookie, sealAndSetCookie } = require("./cookie-helpers");
+const { refreshAuthTokens } = require("./refresh-auth");
+const { UnauthorizedError } = require("./errors");
 
 module.exports = async function authMiddleware(req, res, next) {
-  try {
-    let token;
-    const auth = req.headers.authorization || '';
-    if (auth.startsWith('Bearer ')) {
-      token = auth.slice(7);
-    }
+  const authCookies = req.cookies.auth;
 
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-
-    // verify & attach user
-    const payload = await verifyToken(token);
-    req.user = {
-      id: payload.sub || payload.id,
-      email: payload.email,
-      type: payload.type,
-    };
-
-    next();
-  } catch (err) {
-    console.error('Auth error:', err);
-    res.status(401).json({ error: 'Invalid or expired token' });
+  if (!authCookies) {
+    throw new UnauthorizedError("no_cookie");
   }
+
+  try {
+    const { accessToken, refreshToken } = await unsealCookie(authCookies);
+    req.accessToken = accessToken;
+    req.refreshToken = refreshToken;
+  } catch (err) {
+    throw new UnauthorizedError();
+  }
+
+  let verifyTokenPayload;
+  try {
+    // verify & attach user
+    verifyTokenPayload = await verifyToken(req.accessToken);
+  } catch (err) {
+    // Probably token expired, try refreshing
+    const {
+      verifyTokenPayload: newVerifyTokenPayload,
+      newAccessToken,
+      newRefreshToken,
+    } = await refreshAuthTokens(res, req.refreshToken);
+
+    verifyTokenPayload = newVerifyTokenPayload;
+    req.accessToken = newAccessToken;
+    req.refreshToken = newRefreshToken;
+    await sealAndSetCookie(res, newAccessToken, newRefreshToken);
+  }
+
+  req.user = {
+    id: verifyTokenPayload.id,
+    aud: verifyTokenPayload.aud,
+    type: verifyTokenPayload.type,
+  };
+
+  next();
 };

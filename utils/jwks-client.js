@@ -4,10 +4,7 @@ const jwksRsa = require("jwks-rsa");
 
 // configure the JWKS client
 const client = jwksRsa({
-  jwksUri:
-    process.env.NODE_ENV === "production"
-      ? process.env.MTAS_JWKS_PROD_URL
-      : process.env.MTAS_JWKS_DEV_URL,
+  jwksUri: process.env.MTAS_JWKS_URL,
   cache: true, // cache keys
   cacheMaxEntries: 5, // up to 5 keys
   cacheMaxAge: 10 * 60 * 1000, // 10 minutes
@@ -27,13 +24,18 @@ function getKey(header, callback) {
  */
 function verifyToken(token) {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
-      if (err) return reject(err);
-      if (decoded.type !== "user") {
-        return reject(new Error("Invalid token type"));
-      }
-      resolve(decoded);
-    });
+    jwt.verify(
+      token,
+      getKey,
+      { algorithms: ["RS256"], audience: process.env.MTAS_APP_ID },
+      (err, decoded) => {
+        if (err) return reject(err);
+        if (decoded.type !== "user") {
+          return reject(new Error("Invalid token type"));
+        }
+        resolve(decoded);
+      },
+    );
   });
 }
 
