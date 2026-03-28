@@ -1,6 +1,6 @@
 // jwks-client.js
-const jwt = require('jsonwebtoken');
-const jwksRsa = require('jwks-rsa');
+const jwt = require("jsonwebtoken");
+const jwksRsa = require("jwks-rsa");
 
 // configure the JWKS client
 const client = jwksRsa({
@@ -27,18 +27,13 @@ function getKey(header, callback) {
  */
 function verifyToken(token) {
   return new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      getKey,
-      { algorithms: ['RS256'] },
-      (err, decoded) => {
+    jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
       if (err) return reject(err);
-        if (decoded.type !== 'user') {
-          return reject(new Error('Invalid token type'));
+      if (decoded.type !== "user") {
+        return reject(new Error("Invalid token type"));
       }
       resolve(decoded);
-      }
-    );
+    });
   });
 }
 

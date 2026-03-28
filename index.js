@@ -41,7 +41,7 @@ if (
 app.use('/utils', utilsRouter);
 app.use('/crypto-app', cryptoAppRouter);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5012;
 
 app.listen(port, function () {
   console.log('Runnning on ' + port);
