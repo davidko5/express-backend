@@ -25,7 +25,7 @@ mongoose.connect(config.dbUrl, {
   connectTimeoutMS: 30000,
 });
 
-const allowedOrigins = ["http://localhost:5173", "https://davidko5.github.io"];
+const allowedOrigins = ["http://localhost:5173", "https://poster.kondraten.dev"];
 
 app.use(
   cors({
