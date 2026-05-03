@@ -21,6 +21,11 @@ router.get("/callback", async (req, res) => {
       },
     );
   } catch (err) {
+    console.error(
+      "exchange failed:",
+      err.response?.status,
+      err.response?.data || err.message,
+    );
     return res.redirect(
       `${process.env.MTAS_FE_URL}/user/login?redirectUri=${process.env.MTAS_REDIRECT_URI}&appId=${process.env.MTAS_APP_ID}`,
     );
