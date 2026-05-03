@@ -5,7 +5,34 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const logger = require("morgan");
+const pinoHttp = require("pino-http");
+
+const httpLogger = pinoHttp({
+  transport:
+    process.env.NODE_ENV !== "production"
+      ? {
+          target: "pino-pretty",
+          options: { ignore: "pid,hostname,req,res,responseTime" },
+        }
+      : undefined,
+  redact: {
+    paths: [
+      "req.headers.authorization",
+      "req.headers.cookie",
+      "*.password",
+      "*.access_token",
+      "*.refresh_token",
+      "*.refreshToken",
+      "*.accessToken",
+      "*.token",
+    ],
+    censor: "[REDACTED]",
+  },
+  customSuccessMessage: (req, res, responseTime) =>
+    `${req.method} ${req.url} ${res.statusCode} ${responseTime}ms`,
+  customErrorMessage: (req, res, err) =>
+    `${req.method} ${req.url} ${res.statusCode} ${err.message}`,
+});
 
 const mongoose = require("mongoose");
 const config = require("./config");
@@ -19,7 +46,7 @@ const { HttpError } = require("./utils/errors");
 
 app.use(cookieParser());
 
-app.use(logger("dev"));
+app.use(httpLogger);
 
 mongoose.connect(config.dbUrl, {
   connectTimeoutMS: 30000,
@@ -51,9 +78,12 @@ app.use("/crypto-app", cryptoAppRouter);
 app.use((err, req, res, next) => {
   if (err.response) {
     // axios error
-    console.error("axios:", err.response.status, err.response.data);
+    req.log.error(
+      { status: err.response.status, data: err.response.data },
+      "axios error",
+    );
   } else {
-    console.error(err.message);
+    req.log.error({ err }, err.message);
   }
 
   if (err instanceof HttpError) {
