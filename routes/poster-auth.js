@@ -7,16 +7,16 @@ const {
   clearAuthCookie,
 } = require("../utils/cookie-helpers");
 const { UnauthorizedError } = require("../utils/errors");
+const { mtasConfidentialAxios } = require("../utils/mtas-confidential-axios");
 
 // Mtas redirects here, token is exchanged and set in cookie, then redirect to FE
 router.get("/callback", async (req, res) => {
   let exchangeResponse;
   try {
-    exchangeResponse = await axios.post(
+    exchangeResponse = await mtasConfidentialAxios.post(
       `${process.env.MTAS_URL}/user-auth/exchange-token`,
       {
         authCode: req.query.auth_code,
-        appId: process.env.MTAS_APP_ID,
         redirectUri: process.env.MTAS_REDIRECT_URI,
       },
     );
@@ -39,7 +39,7 @@ router.get("/callback", async (req, res) => {
 });
 
 router.post("/logout", authMiddleware, async (req, res) => {
-  await axios.post(`${process.env.MTAS_URL}/user-auth/revoke`, {
+  await mtasConfidentialAxios.post(`${process.env.MTAS_URL}/user-auth/revoke`, {
     refreshToken: req.refreshToken,
   });
 
